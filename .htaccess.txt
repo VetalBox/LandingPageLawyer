@@ -1,0 +1,75 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+AddDefaultCharset utf-8
+
+# Новый адрес главной страницы
+DirectoryIndex https://kadastr.od.ua/index.php
+
+# Перенаправляем с HTTP на HTTPS
+SetEnvIf X-HTTPS 1 HTTPS
+RewriteBase /
+RewriteCond %{HTTP:X-HTTPS} !1
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Редирект домена с WWW на домен без WWW
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# Caching
+<IfModule mod_expires.c>
+ExpiresActive On
+ # Кеш для изображений
+ ExpiresByType image/x-icon "access 1 month"
+ ExpiresByType image/jpeg "access 1 month"
+  ExpiresByType image/jpg "access 1 month"
+ ExpiresByType image/png "access 1 month"
+ ExpiresByType image/gif "access 1 month"
+ 
+# Кеш контента (CSS, JS)
+
+ ExpiresByType text/css "access 1 month"
+ ExpiresByType text/javascript "access 1 month"
+ ExpiresByType application/javascript "access 1 month"
+ ExpiresByType application/x-javascript "access 1 month"
+ ExpiresByType text/html "access 1 month"
+ ExpiresByType application/xhtml+xml "access 1 month"
+
+# Кеш video (MP4, ogg)
+
+  ExpiresByType video/mp4 "access 1 month"
+  ExpiresByType video/ogv "access 1 month"
+  
+  ExpiresDefault "access 1 month"
+
+</ifModule>
+
+# использование кэша браузера
+
+    FileETag MTime Size
+
+    <ifmodule mod_expires.c>
+    <filesmatch ".(jpg|jpeg|gif|png|ico|css|js)$">
+    ExpiresActive on
+    ExpiresDefault "access plus 1 year"
+    </filesmatch>
+    </ifmodule>
+
+# Сжатие файлов
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  <IfModule mod_setenvif.c>
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+  </IfModule>
+</IfModule>

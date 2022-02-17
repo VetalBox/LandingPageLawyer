@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Host:www.kadastr.od.ua
+
+
+Sitemap: https://kadastr.od.ua/sitemap.xml
